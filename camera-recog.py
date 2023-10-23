@@ -21,14 +21,11 @@ async def main():
         print("Cannot open camera")
         exit()
         
-    face_locations = []
-    face_encodings = []
-    face_names = []
-    process_this_frame = True
-
-    frames_without_face = 0
-    frames_with_face = 0
     while True:
+        # TODO: add my face as known face
+        # TODO: occlusion of face destroys recognition
+        # TODO: add timings i.e. only turns on after 6 PM
+        # TODO: turn off camera between 10 PM and 6 AM
         # Capture frame-by-frame
         ret, frame = cap.read()
         # if frame is read correctly ret is True
@@ -74,7 +71,7 @@ async def main():
                         # cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
 
         indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
-
+        print(indexes)
         # Draw bounding box
         for i in range(len(boxes)):
             if i in indexes:
@@ -112,10 +109,7 @@ async def main():
             
         #     face_names = []
         #     for face_encoding in face_encodings:
-        #         # TODO: add my face as known face
-        #         # TODO: occlusion of face destroys recognition
-        #         # TODO: add timings i.e. only turns on after 6 PM
-        #         # TODO: turn off camera between 10 PM and 6 AM
+
                 
         #         # See if the face is a match for the known face(s)
         #         # matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
