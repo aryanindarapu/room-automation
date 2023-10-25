@@ -39,7 +39,7 @@ async def main():
                 break
             
             height, width, channels = frame.shape
-
+            print("frame shape: ", frame.shape)
             # Detecting objects
             blob = cv2.dnn.blobFromImage(frame, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
             net.setInput(blob)
@@ -74,42 +74,43 @@ async def main():
 
                             # Draw rectangle
                             # cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-
+            print("frame processed")
             indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
             
-            if len(indexes) == 0:
-                frames_without_face += 1
-                frames_with_face = 0
-                if frames_without_face > 100:
-                    frames_without_face = 0
-                    await p.turn_off()
-            else:
-                frames_with_face += 1
-                frames_without_face = 0
-                if frames_with_face > 10:
-                    frames_with_face = 0
-                    await p.turn_on()
+            # if len(indexes) == 0:
+            #     frames_without_face += 1
+            #     frames_with_face = 0
+            #     if frames_without_face > 100:
+            #         frames_without_face = 0
+            #         await p.turn_off()
+            # else:
+            #     frames_with_face += 1
+            #     frames_without_face = 0
+            #     if frames_with_face > 10:
+            #         frames_with_face = 0
+            #         await p.turn_on()
 
             # Draw bounding box
-            # for i in range(len(boxes)):
-            #     if i in indexes:
-            #         x, y, w, h = boxes[i]
-            #         label = str("human")
-            #         confidence = confidences[i]
-            #         color = (0, 255, 0)
-            #         cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
-            #         cv2.putText(frame, label + " " + str(round(confidence, 2)), (x, y + 30), cv2.FONT_HERSHEY_PLAIN, 2, color, 2)
+            for i in range(len(boxes)):
+                if i in indexes:
+                    x, y, w, h = boxes[i]
+                    label = str("human")
+                    confidence = confidences[i]
+                    color = (0, 255, 0)
+                    cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
+                    cv2.putText(frame, label + " " + str(round(confidence, 2)), (x, y + 30), cv2.FONT_HERSHEY_PLAIN, 2, color, 2)
                  
         process_this_frame = not process_this_frame
 
         # Display the resulting image
-        # cv2.imshow('Video', frame)
-        if cv2.waitKey(1) == ord('q'):
-            break
+        cv2.imwrite('Video', frame)
+        # if cv2.waitKey(1) == ord('q'):
+        #     break
+        break
 
     # When everything done, release the capture
     cap.release()
-    cv2.destroyAllWindows()
+    # cv2.destroyAllWindows()
 
 if __name__ == "__main__":
     asyncio.run(main())

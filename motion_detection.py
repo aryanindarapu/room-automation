@@ -1,7 +1,7 @@
 import utils
 import asyncio
-import requests
-import json
+# import requests
+# import json
 import cv2
 from kasa.smartplug import SmartPlug
 
@@ -35,18 +35,18 @@ async def main():
             #     print("Motion detected")
             #     frames_with_motion += 1
                 
-            if len(contours) < 5:
+            if len(contours) < 30:
                 frames_without_motion += 1
                 frames_with_motion = 0
                 # print("Frames without motion: " + str(frames_without_motion))
-                if frames_without_motion > 100:
+                if frames_without_motion > 60:
                     frames_without_motion = 0
                     await p.turn_off()
             else:
                 frames_with_motion += 1
                 frames_without_motion = 0
                 # print("Frames with motion: " + str(frames_with_motion))
-                if frames_with_motion > 30:
+                if frames_with_motion > 18:
                     # print("Turning on")
                     frames_with_motion = 0
                     await p.turn_on()
