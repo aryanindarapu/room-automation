@@ -1,7 +1,6 @@
 import utils
 import asyncio
-# import requests
-# import json
+from datetime import datetime
 import cv2
 from kasa.smartplug import SmartPlug
 
@@ -11,6 +10,7 @@ cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)  # reduce frame height
 
 
 async def main():
+    curr_time = datetime.now()
     ret, frame1 = cap.read()
     ret, frame2 = cap.read()
     
@@ -63,7 +63,7 @@ async def main():
         ret, frame2 = cap.read()
         frame_count += 1
 
-        if cv2.waitKey(1) & 0xFF == ord("q"):
+        if curr_time.hour >= 18:
             break
 
     cap.release()
